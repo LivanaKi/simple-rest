@@ -1,0 +1,21 @@
+version: '3.8'
+services: 
+    simple-rest:
+        build: 
+            context: ./
+            dockerfile: Dockerfile
+        depends_on:     
+            - db
+        environment: 
+            - DB_PASSWORD=root
+        ports: 
+            - 8080:8080
+    db:
+        restart: always
+        image: postgres:latest
+        environment:
+             POSTGRES_PASSWORD: root
+        ports: 
+            - 5433:5432
+        volumes:
+            - ./migration/init_database.sql:/docker-entrypoint-initdb.d/1_init.sql
