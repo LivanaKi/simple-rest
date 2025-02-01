@@ -1,39 +1,47 @@
 # Описання
-# HTTP сервер
+## HTTP сервер
 
-Базова авторизація: User : admin, Password : password
+    Базова авторизація: User : admin, Password : password
 
-Сутність продавець(sellers) з полями ім'я та телефон.
+    Сутність продавець(sellers) з полями ім'я та телефон.
  
-Отримання всіх продавців - метод GET та http://localhost:8080/api/seller
+    Отримання всіх продавців - метод GET та http://localhost:8080/api/seller
  
-Отримання одного продавця за id - метод GET та http://localhost:8080/api/seller/:sellerId
+    Отримання одного продавця за id - метод GET та http://localhost:8080/api/seller/:sellerId
  
-Додавання нового продавця - метод POST та http://localhost:8080/api/seller
+    Додавання нового продавця - метод POST та http://localhost:8080/api/seller
  
-Оновлення продавця за id - метод PATCH та http://localhost:8080/api/seller/:sellerId
+    Оновлення продавця за id - метод PATCH та http://localhost:8080/api/seller/:sellerId
  
-Видалення продавця за id - метод DELETE та http://localhost:8080/api/seller/:sellerId
+    Видалення продавця за id - метод DELETE та http://localhost:8080/api/seller/:sellerId
 
-Запуск програми за допомогою команди :
+    Запуск програми за допомогою команди :
+ ```
+ docker-compose up -d
+ ```
  
- docker-compose up -d 
- 
-Для створення сутностей виконати команду:
- 
+    Для створення сутностей виконати команду:
+ ```
   make migrate-up
+```
 
-Тести: make test
+    Тести: 
+```make test
+```
 
-Лінтери: make lint
+    Лінтери: 
+```
+make lint
+```
 
-# Оптимізація функції конкатенації
+## Оптимізація функції конкатенації
 
-Знаходиться: "github.com/Users/natza/simple-rest/concatenations"
+    Знаходиться: "https://github.com/Users/natza/simple-rest/concatenations"
 
-Розроблено додатково дві функції з використанням strings. Для отримання результатів тесту виконати команду:
-
-make test-brench
+    Розроблено додатково дві функції з використанням strings. Для отримання результатів тесту виконати команду:
+```
+    make test-brench
+```
 
 # Виконанено
 1. Розроблено http сервера без використання фреймворків з виконанням CRUD операції над сутностями 
