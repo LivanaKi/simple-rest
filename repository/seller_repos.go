@@ -7,9 +7,9 @@ import (
 )
 
 type SellerRepository interface {
-	Create(ctx context.Context, seller model.Seller)
-	Read(ctx context.Context) []model.Seller
-	Update(ctx context.Context, seller model.Seller)
-	Delete(ctx context.Context, sellerId int)
-	FindById(ctx context.Context, sellerId int) (model.Seller, error)
+	Save(ctx context.Context, seller model.Seller) error
+	Read(ctx context.Context) ([]model.Seller, error)
+	Update(ctx context.Context, seller model.Seller) error
+	Delete(ctx context.Context, sellerID int) error
+	FindByID(ctx context.Context, sellerID int) (model.Seller, error)
 }

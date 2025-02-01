@@ -6,9 +6,9 @@ import (
 )
 
 func InitDB() *sql.DB {
-	db, errDb := sql.Open("postgres", "host=db port=5432 user=root password=root dbname=rest sslmode=disable")
-	if errDb != nil {
-		log.Fatal(errDb)
+	db, errDB := sql.Open("postgres", "host=db port=5432 user=root password=root dbname=rest sslmode=disable")
+	if errDB != nil {
+		log.Fatal(errDB)
 	}
 	err := db.Ping()
 	if err != nil {

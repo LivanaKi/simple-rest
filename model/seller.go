@@ -1,7 +1,7 @@
 package model
 
 type Seller struct {
-	Id    int
+	ID    int
 	Name  string
 	Phone string
 }

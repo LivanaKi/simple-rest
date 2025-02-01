@@ -3,20 +3,20 @@ package main
 import (
 	"log"
 	"net/http"
+	"time"
 
 	_ "github.com/lib/pq"
 
-	"github.com/Users/natza/simple-rest/auth"
 	"github.com/Users/natza/simple-rest/controller"
 	"github.com/Users/natza/simple-rest/database"
 	"github.com/Users/natza/simple-rest/helper"
+	"github.com/Users/natza/simple-rest/pkg/auth"
 	"github.com/Users/natza/simple-rest/repository"
 	"github.com/Users/natza/simple-rest/router"
 	"github.com/Users/natza/simple-rest/service"
 )
 
 func main() {
-
 	log.Printf("Server start")
 
 	db := database.InitDB()
@@ -26,7 +26,11 @@ func main() {
 	routes := router.NewRouter(sellerController)
 	securedRoutes := auth.BasicAuthMiddleware(routes)
 
-	server := http.Server{Addr: ":8080", Handler: securedRoutes}
+	server := &http.Server{
+		Addr:              ":8080",
+		Handler:           securedRoutes,
+		ReadHeaderTimeout: 5 * time.Second,
+	}
 	err := server.ListenAndServe()
 	helper.PanicIfError(err)
 }

@@ -8,9 +8,9 @@ import (
 )
 
 type SellerService interface {
-	Create(ctx context.Context, request request.SellerCreateRequest)
-	Update(ctx context.Context, request request.SellerUpdateRequest)
-	Delete(ctx context.Context, sellerId int)
-	Read(ctx context.Context) []response.SellerRespons
-	FindById(ctx context.Context, sellerId int) response.SellerRespons
+	Create(ctx context.Context, request request.SellerCreateRequest) error
+	Update(ctx context.Context, request request.SellerUpdateRequest) error
+	Delete(ctx context.Context, sellerID int) error
+	Read(ctx context.Context) ([]response.SellerResponse, error)
+	FindByID(ctx context.Context, sellerID int) (response.SellerResponse, error)
 }

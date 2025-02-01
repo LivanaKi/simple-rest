@@ -11,82 +11,127 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-type SellerControler struct {
+type SellerController struct {
 	SellerService service.SellerService
 }
 
-func NewSellerController(sellerService service.SellerService) *SellerControler {
-	return &SellerControler{SellerService: sellerService}
+func NewSellerController(sellerService service.SellerService) *SellerController {
+	return &SellerController{SellerService: sellerService}
 }
 
-func (controller *SellerControler) Create(writer http.ResponseWriter, requests *http.Request, params httprouter.Params) {
+func (controller *SellerController) Create(writer http.ResponseWriter, requests *http.Request, _ httprouter.Params) {
 	sellerCreateRequest := request.SellerCreateRequest{}
 	helper.ReadRequestBody(requests, &sellerCreateRequest)
 
-	controller.SellerService.Create(requests.Context(), sellerCreateRequest)
+	err := controller.SellerService.Create(requests.Context(), sellerCreateRequest)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	webResponse := response.WebResponse{
-		Code:   200,
-		Status: "Ok",
+		Code:   http.StatusCreated,
+		Status: "Created",
 		Data:   nil,
 	}
 	helper.WriteResponse(writer, webResponse)
 }
 
-func (controller *SellerControler) Update(writer http.ResponseWriter, requests *http.Request, params httprouter.Params) {
+func (controller *SellerController) Update(
+	writer http.ResponseWriter,
+	requests *http.Request,
+	params httprouter.Params,
+) {
 	sellerUpdateRequest := request.SellerUpdateRequest{}
 	helper.ReadRequestBody(requests, &sellerUpdateRequest)
 
-	sellerId := params.ByName("sellerId")
-	id, err := strconv.Atoi(sellerId)
-	helper.PanicIfError(err)
-	sellerUpdateRequest.Id = id
+	sellerID := params.ByName("sellerID")
+	id, err := strconv.Atoi(sellerID)
+	if err != nil {
+		http.Error(writer, "Invalid seller ID", http.StatusBadRequest)
+		return
+	}
+	sellerUpdateRequest.ID = id
 
-	controller.SellerService.Update(requests.Context(), sellerUpdateRequest)
+	if err := controller.SellerService.Update(requests.Context(), sellerUpdateRequest); err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	webResponse := response.WebResponse{
-		Code:   200,
-		Status: "Ok",
+		Code:   http.StatusOK,
+		Status: "Updated",
 		Data:   nil,
 	}
-
 	helper.WriteResponse(writer, webResponse)
 }
 
-func (controller *SellerControler) Delete(writer http.ResponseWriter, requests *http.Request, params httprouter.Params) {
-	sellerId := params.ByName("sellerId")
-	id, err := strconv.Atoi(sellerId)
-	helper.PanicIfError(err)
+func (controller *SellerController) Delete(
+	writer http.ResponseWriter,
+	requests *http.Request,
+	params httprouter.Params,
+) {
+	sellerID := params.ByName("sellerID")
+	id, err := strconv.Atoi(sellerID)
+	if err != nil {
+		http.Error(writer, "Invalid seller ID", http.StatusBadRequest)
+		return
+	}
 
-	controller.SellerService.Delete(requests.Context(), id)
+	if err := controller.SellerService.Delete(requests.Context(), id); err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	webResponse := response.WebResponse{
-		Code:   200,
-		Status: "Ok",
+		Code:   http.StatusOK,
+		Status: "Deleted",
 		Data:   nil,
 	}
-
 	helper.WriteResponse(writer, webResponse)
 }
 
-func (controller *SellerControler) Read(writer http.ResponseWriter, requests *http.Request, params httprouter.Params) {
-	result := controller.SellerService.Read(requests.Context())
-	webResponse := response.WebResponse{
-		Code:   200,
-		Status: "Ok",
-		Data:   result,
+func (controller *SellerController) Read(writer http.ResponseWriter, requests *http.Request, _ httprouter.Params) {
+	result, err := controller.SellerService.Read(requests.Context())
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
+	if result == nil {
+		result = nil
+	}
+
+	webResponse := response.WebResponse{
+		Code:   http.StatusOK,
+		Status: "Success",
+		Data:   result,
+	}
 	helper.WriteResponse(writer, webResponse)
 }
 
-func (controller *SellerControler) FindById(writer http.ResponseWriter, requests *http.Request, params httprouter.Params) {
-	sellerId := params.ByName("sellerId")
-	id, err := strconv.Atoi(sellerId)
-	helper.PanicIfError(err)
-	result := controller.SellerService.FindById(requests.Context(), id)
-	webResponse := response.WebResponse{
-		Code:   200,
-		Status: "Ok",
-		Data:   result,
+func (controller *SellerController) FindByID(
+	writer http.ResponseWriter,
+	requests *http.Request,
+	params httprouter.Params,
+) {
+	sellerID := params.ByName("sellerID")
+	id, err := strconv.Atoi(sellerID)
+	if err != nil {
+		http.Error(writer, "Invalid seller ID", http.StatusBadRequest)
+		return
 	}
 
+	result, err := controller.SellerService.FindByID(requests.Context(), id)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	webResponse := response.WebResponse{
+		Code:   http.StatusOK,
+		Status: "Found",
+		Data:   result,
+	}
 	helper.WriteResponse(writer, webResponse)
 }
