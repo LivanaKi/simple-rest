@@ -16,32 +16,27 @@
     Видалення продавця за id - метод DELETE та http://localhost:8080/api/seller/:sellerId
 
     Запуск програми за допомогою команди :
- ```
- docker-compose up -d
- ```
+
+    **docker-compose up -d**
  
     Для створення сутностей виконати команду:
- ```
-  make migrate-up
-```
+    
+    **make migrate-up**
 
     Тести: 
-```make test
-```
+    
+    **make test**   
 
     Лінтери: 
-```
-make lint
-```
+
+    **make lint**
 
 ## Оптимізація функції конкатенації
 
     Знаходиться: "https://github.com/Users/natza/simple-rest/concatenations"
 
     Розроблено додатково дві функції з використанням strings. Для отримання результатів тесту виконати команду:
-```
-    make test-brench
-```
+    **make test-brench**
 
 # Виконанено
 1. Розроблено http сервера без використання фреймворків з виконанням CRUD операції над сутностями 
