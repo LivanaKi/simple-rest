@@ -4,6 +4,7 @@ import (
 	"strings"
 )
 
+// ConcatOne - concat from task
 func ConcatOne(str []string) string {
 	result := ""
 	for _, v := range str {
