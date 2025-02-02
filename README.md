@@ -7,33 +7,46 @@
 # Описання
 ## HTTP сервер
 
- Базова авторизація: User : admin, Password : password
+ Базова авторизація: User : `admin`, Password : `password`
 
  Сутність продавець(sellers) з полями ім'я та телефон.
  
- Отримання всіх продавців - метод GET та http://localhost:8080/api/seller
+ Отримання всіх продавців - `GET http://localhost:8080/api/seller`
  
- Отримання одного продавця за id - метод GET та http://localhost:8080/api/seller/:sellerId
+ Отримання одного продавця за id - `GET http://localhost:8080/api/seller/:seller_id`
  
- Додавання нового продавця - метод POST та http://localhost:8080/api/seller
+ Додавання нового продавця - `POST http://localhost:8080/api/seller`
+```
+{
+   "name":"Maks2",
+   "phone": "+389476543"
+}
+```
  
- Оновлення продавця за id - метод PATCH та http://localhost:8080/api/seller/:sellerId
+ Оновлення продавця за id - `PATCH http://localhost:8080/api/seller/:seller_id`
+```
+{
+   "id":3,
+   "name":"Maks3",
+   "phone": "+329476543"
+}
+```
  
- Видалення продавця за id - метод DELETE та http://localhost:8080/api/seller/:sellerId
+ Видалення продавця за id - `DELETE http://localhost:8080/api/seller/:seller_id`
 
- Запуск програми за допомогою команди : docker-compose up -d
+ Запуск програми за допомогою команди : `docker-compose up -d`
  
- Для створення сутностей виконати команду: make migrate-up
+ Для створення сутностей виконати команду: `make migrate-up`
 
- Тести: make test   
+ Тести: `make test`   
 
- Лінтери: make lint
+ Лінтери: `make lint`
 
 ## Оптимізація функції конкатенації
 
- Знаходиться: "https://github.com/Users/natza/simple-rest/concatenations"
+ Знаходиться: [pkg/concatenations/concatenations.go](https://github.com/LivanaKi/simple-rest/pkg/concatenations/concatenations.go) 
 
- Розроблено додатково дві функції з використанням strings. Для отримання результатів тесту виконати команду: make test-brench
+ Розроблено додатково дві функції (ConcatTwo, ConcatThree) з використанням strings. Для отримання результатів тесту виконати команду: `make test-bench`
 
 # Тестове завдання
 

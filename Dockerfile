@@ -7,6 +7,6 @@ COPY . .
 RUN apk --update add postgresql-client
 
 RUN go mod download
-RUN go build -o simple-rest ./main.go
+RUN go build -o simple-rest ./cmd/main.go
 EXPOSE 8080
 CMD ["./simple-rest"]
