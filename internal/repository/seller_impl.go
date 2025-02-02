@@ -5,20 +5,20 @@ import (
 	"database/sql"
 	"errors"
 
-	"github.com/Users/natza/simple-rest/helper"
-	"github.com/Users/natza/simple-rest/model"
+	"github.com/Users/natza/simple-rest/internal/model"
+	"github.com/Users/natza/simple-rest/pkg/helper"
 )
 
-type SellerImpl struct {
+type sellerRepository struct {
 	DB *sql.DB
 }
 
 func NewSeller(db *sql.DB) SellerRepository {
-	return &SellerImpl{DB: db}
+	return &sellerRepository{DB: db}
 }
 
 // Delete
-func (b *SellerImpl) Delete(ctx context.Context, sellerID int) error {
+func (b *sellerRepository) Delete(ctx context.Context, sellerID int) error {
 	tx, err := b.DB.Begin()
 	if err != nil {
 		return err
@@ -34,7 +34,7 @@ func (b *SellerImpl) Delete(ctx context.Context, sellerID int) error {
 }
 
 // Create
-func (b *SellerImpl) Save(ctx context.Context, seller model.Seller) error {
+func (b *sellerRepository) Save(ctx context.Context, seller *model.Seller) error {
 	tx, err := b.DB.Begin()
 	if err != nil {
 		return err
@@ -50,18 +50,21 @@ func (b *SellerImpl) Save(ctx context.Context, seller model.Seller) error {
 }
 
 // Read
-func (b *SellerImpl) Read(ctx context.Context) ([]model.Seller, error) {
+func (b *sellerRepository) Read(ctx context.Context) ([]model.Seller, error) {
 	tx, err := b.DB.Begin()
 	if err != nil {
 		return nil, err
 	}
+
 	defer helper.CommitOrRollback(tx)
 
 	SQL := "select id, name, phone from sellers"
+
 	result, err := tx.QueryContext(ctx, SQL)
 	if err != nil {
 		return nil, err
 	}
+
 	defer result.Close()
 
 	var sellers []model.Seller
@@ -75,38 +78,45 @@ func (b *SellerImpl) Read(ctx context.Context) ([]model.Seller, error) {
 
 		sellers = append(sellers, seller)
 	}
+
 	return sellers, nil
 }
 
 // Update
-func (b *SellerImpl) Update(ctx context.Context, seller model.Seller) error {
+func (b *sellerRepository) Update(ctx context.Context, seller *model.Seller) error {
 	tx, err := b.DB.Begin()
 	if err != nil {
 		return err
 	}
+
 	defer helper.CommitOrRollback(tx)
 
 	SQL := "update sellers set name=$1, phone=$2 where id=$3"
+
 	_, err = tx.ExecContext(ctx, SQL, seller.Name, seller.Phone, seller.ID)
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
 // Find by id
-func (b *SellerImpl) FindByID(ctx context.Context, sellerID int) (model.Seller, error) {
+func (b *sellerRepository) FindByID(ctx context.Context, sellerID int) (*model.Seller, error) {
 	tx, err := b.DB.Begin()
 	if err != nil {
-		return model.Seller{}, err
+		return nil, err
 	}
+
 	defer helper.CommitOrRollback(tx)
 
 	SQL := "select id, name, phone from sellers where id=$1"
+
 	result, errQuery := tx.QueryContext(ctx, SQL, sellerID)
 	if errQuery != nil {
-		return model.Seller{}, errQuery
+		return nil, errQuery
 	}
+
 	defer result.Close()
 
 	seller := model.Seller{}
@@ -114,9 +124,10 @@ func (b *SellerImpl) FindByID(ctx context.Context, sellerID int) (model.Seller, 
 	if result.Next() {
 		err := result.Scan(&seller.ID, &seller.Name, &seller.Phone)
 		if err != nil {
-			return model.Seller{}, err
+			return nil, err
 		}
-		return seller, nil
+		return &seller, nil
 	}
-	return seller, errors.New("sellers id not found")
+
+	return &seller, errors.New("sellers id not found")
 }

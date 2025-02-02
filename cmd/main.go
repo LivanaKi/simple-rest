@@ -7,19 +7,19 @@ import (
 
 	_ "github.com/lib/pq"
 
-	"github.com/Users/natza/simple-rest/controller"
-	"github.com/Users/natza/simple-rest/database"
-	"github.com/Users/natza/simple-rest/helper"
+	"github.com/Users/natza/simple-rest/internal/controller"
+	"github.com/Users/natza/simple-rest/internal/repository"
+	"github.com/Users/natza/simple-rest/internal/router"
+	"github.com/Users/natza/simple-rest/internal/service"
 	"github.com/Users/natza/simple-rest/pkg/auth"
-	"github.com/Users/natza/simple-rest/repository"
-	"github.com/Users/natza/simple-rest/router"
-	"github.com/Users/natza/simple-rest/service"
+	"github.com/Users/natza/simple-rest/pkg/helper"
+	"github.com/Users/natza/simple-rest/pkg/pg"
 )
 
 func main() {
 	log.Printf("Server start")
 
-	db := database.InitDB()
+	db := pg.InitDB()
 	sellerRepository := repository.NewSeller(db)
 	sellerService := service.NewSellerServiceImpl(sellerRepository)
 	sellerController := controller.NewSellerController(sellerService)

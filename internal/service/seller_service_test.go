@@ -7,18 +7,18 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
-	"github.com/Users/natza/simple-rest/data/request"
-	"github.com/Users/natza/simple-rest/model"
+	"github.com/Users/natza/simple-rest/internal/model"
+	"github.com/Users/natza/simple-rest/internal/repository"
 )
 
 func TestCreate(t *testing.T) {
-	mockRepo := new(MockSellerRepository)
+	mockRepo := new(repository.MockSellerRepository)
 	service := NewSellerServiceImpl(mockRepo)
 
 	ctx := context.Background()
-	req := request.SellerCreateRequest{Name: "test", Phone: "+11111"}
+	req := &model.Seller{Name: "test", Phone: "+11111"}
 
-	mockRepo.On("Save", ctx, mock.AnythingOfType("model.Seller")).Return(nil)
+	mockRepo.On("Save", ctx, mock.AnythingOfType("*model.Seller")).Return(nil)
 
 	err := service.Create(ctx, req)
 
@@ -27,11 +27,11 @@ func TestCreate(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
-	mockRepo := new(MockSellerRepository)
+	mockRepo := new(repository.MockSellerRepository)
 	service := NewSellerServiceImpl(mockRepo)
 
 	ctx := context.Background()
-	seller := model.Seller{ID: 1, Name: "test", Phone: "+11111"}
+	seller := &model.Seller{ID: 1, Name: "test", Phone: "+11111"}
 
 	mockRepo.On("FindByID", ctx, 1).Return(seller, nil)
 	mockRepo.On("Delete", ctx, 1).Return(nil)
@@ -43,11 +43,11 @@ func TestDelete(t *testing.T) {
 }
 
 func TestFindByID(t *testing.T) {
-	mockRepo := new(MockSellerRepository)
+	mockRepo := new(repository.MockSellerRepository)
 	service := NewSellerServiceImpl(mockRepo)
 
 	ctx := context.Background()
-	seller := model.Seller{ID: 1, Name: "test", Phone: "+11111"}
+	seller := &model.Seller{ID: 1, Name: "test", Phone: "+11111"}
 
 	mockRepo.On("FindByID", ctx, 1).Return(seller, nil)
 
@@ -61,15 +61,15 @@ func TestFindByID(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	mockRepo := new(MockSellerRepository)
+	mockRepo := new(repository.MockSellerRepository)
 	service := NewSellerServiceImpl(mockRepo)
 
 	ctx := context.Background()
-	existingSeller := model.Seller{ID: 1, Name: "test", Phone: "+11111"}
-	updateReq := request.SellerUpdateRequest{ID: 1, Name: "test", Phone: "+22222"}
+	existingSeller := &model.Seller{ID: 1, Name: "test", Phone: "+11111"}
+	updateReq := &model.Seller{ID: 1, Name: "test", Phone: "+22222"}
 
 	mockRepo.On("FindByID", ctx, 1).Return(existingSeller, nil)
-	mockRepo.On("Update", ctx, mock.AnythingOfType("model.Seller")).Return(nil)
+	mockRepo.On("Update", ctx, mock.AnythingOfType("*model.Seller")).Return(nil)
 
 	err := service.Update(ctx, updateReq)
 
@@ -78,7 +78,7 @@ func TestUpdate(t *testing.T) {
 }
 
 func TestRead(t *testing.T) {
-	mockRepo := new(MockSellerRepository)
+	mockRepo := new(repository.MockSellerRepository)
 	service := NewSellerServiceImpl(mockRepo)
 
 	ctx := context.Background()

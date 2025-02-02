@@ -9,18 +9,20 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/Users/natza/simple-rest/data/request"
-	"github.com/Users/natza/simple-rest/data/response"
 	"github.com/julienschmidt/httprouter"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+
+	"github.com/Users/natza/simple-rest/internal/data/response"
+	"github.com/Users/natza/simple-rest/internal/model"
+	"github.com/Users/natza/simple-rest/internal/service"
 )
 
 func TestCreateSeller(t *testing.T) {
-	mockService := new(MockSellerService)
+	mockService := new(service.MockSellerService)
 	controller := NewSellerController(mockService)
 
-	sellerReq := request.SellerCreateRequest{Name: "Test Seller"}
+	sellerReq := &model.Seller{Name: "Test Seller"}
 	jsonBody, _ := json.Marshal(sellerReq)
 
 	req := httptest.NewRequest(http.MethodPost, "/sellers", bytes.NewBuffer(jsonBody))
@@ -39,10 +41,10 @@ func TestCreateSeller(t *testing.T) {
 }
 
 func TestCreateSeller_Error(t *testing.T) {
-	mockService := new(MockSellerService)
+	mockService := new(service.MockSellerService)
 	controller := NewSellerController(mockService)
 
-	sellerReq := request.SellerCreateRequest{Name: "Test Seller"}
+	sellerReq := &model.Seller{Name: "Test Seller"}
 	jsonBody, _ := json.Marshal(sellerReq)
 
 	req := httptest.NewRequest(http.MethodPost, "/sellers", bytes.NewBuffer(jsonBody))
@@ -60,10 +62,10 @@ func TestCreateSeller_Error(t *testing.T) {
 	mockService.AssertExpectations(t)
 }
 func TestFindByID_Success(t *testing.T) {
-	mockService := new(MockSellerService)
+	mockService := new(service.MockSellerService)
 	controller := NewSellerController(mockService)
 
-	expectedSeller := response.SellerResponse{ID: 1, Name: "Test Seller"}
+	expectedSeller := &model.Seller{ID: 1, Name: "Test Seller"}
 	mockService.On("FindByID", mock.Anything, 1).Return(expectedSeller, nil)
 
 	req := httptest.NewRequest(http.MethodGet, "/sellers/1", http.NoBody)
@@ -80,10 +82,10 @@ func TestFindByID_Success(t *testing.T) {
 }
 
 func TestFindByID_NotFound(t *testing.T) {
-	mockService := new(MockSellerService)
+	mockService := new(service.MockSellerService)
 	controller := NewSellerController(mockService)
 
-	mockService.On("FindByID", mock.Anything, 1).Return(response.SellerResponse{}, errors.New("not found"))
+	mockService.On("FindByID", mock.Anything, 1).Return(&model.Seller{}, errors.New("not found"))
 
 	req := httptest.NewRequest(http.MethodGet, "/sellers/1", http.NoBody)
 	w := httptest.NewRecorder()
@@ -99,7 +101,7 @@ func TestFindByID_NotFound(t *testing.T) {
 }
 
 func TestFindByID_InvalidID(t *testing.T) {
-	mockService := new(MockSellerService)
+	mockService := new(service.MockSellerService)
 	controller := NewSellerController(mockService)
 
 	req := httptest.NewRequest(http.MethodGet, "/sellers/abc", http.NoBody)
@@ -114,10 +116,10 @@ func TestFindByID_InvalidID(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, resp.StatusCode)
 }
 func TestUpdate_Success(t *testing.T) {
-	mockService := new(MockSellerService)
+	mockService := new(service.MockSellerService)
 	controller := NewSellerController(mockService)
 
-	sellerReq := request.SellerUpdateRequest{ID: 1, Name: "Updated Seller"}
+	sellerReq := &model.Seller{ID: 1, Name: "Updated Seller"}
 	jsonBody, _ := json.Marshal(sellerReq)
 
 	req := httptest.NewRequest(http.MethodPut, "/sellers/1", bytes.NewBuffer(jsonBody))
@@ -137,7 +139,7 @@ func TestUpdate_Success(t *testing.T) {
 }
 
 func TestDelete_Success(t *testing.T) {
-	mockService := new(MockSellerService)
+	mockService := new(service.MockSellerService)
 	controller := NewSellerController(mockService)
 
 	mockService.On("Delete", mock.Anything, 1).Return(nil)
@@ -156,7 +158,7 @@ func TestDelete_Success(t *testing.T) {
 }
 
 func TestDelete_Error(t *testing.T) {
-	mockService := new(MockSellerService)
+	mockService := new(service.MockSellerService)
 	controller := NewSellerController(mockService)
 
 	mockService.On("Delete", mock.Anything, 1).Return(errors.New("DB error"))
@@ -173,10 +175,10 @@ func TestDelete_Error(t *testing.T) {
 	assert.Equal(t, http.StatusInternalServerError, resp.StatusCode)
 }
 func TestRead_Success(t *testing.T) {
-	mockService := new(MockSellerService)
+	mockService := new(service.MockSellerService)
 	controller := NewSellerController(mockService)
 
-	expectedSellers := []response.SellerResponse{
+	expectedSellers := []model.Seller{
 		{ID: 1, Name: "Seller 1"},
 		{ID: 2, Name: "Seller 2"},
 	}
@@ -207,10 +209,10 @@ func TestRead_Success(t *testing.T) {
 }
 
 func TestRead_Error(t *testing.T) {
-	mockService := new(MockSellerService)
+	mockService := new(service.MockSellerService)
 	controller := NewSellerController(mockService)
 
-	mockService.On("Read", mock.Anything).Return([]response.SellerResponse{}, errors.New("DB error"))
+	mockService.On("Read", mock.Anything).Return([]model.Seller{}, errors.New("DB error"))
 
 	req := httptest.NewRequest(http.MethodGet, "/sellers", http.NoBody)
 	w := httptest.NewRecorder()

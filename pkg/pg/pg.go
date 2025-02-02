@@ -1,4 +1,4 @@
-package database
+package pg
 
 import (
 	"database/sql"
@@ -10,9 +10,11 @@ func InitDB() *sql.DB {
 	if errDB != nil {
 		log.Fatal(errDB)
 	}
+
 	err := db.Ping()
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	return db
 }

@@ -4,15 +4,16 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/Users/natza/simple-rest/controller"
 	"github.com/julienschmidt/httprouter"
+
+	"github.com/Users/natza/simple-rest/internal/controller"
 )
 
 func NewRouter(sellerController *controller.SellerController) *httprouter.Router {
 	router := httprouter.New()
 
 	router.GET("/", func(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
-		fmt.Fprint(w, "Welcome Home ")
+		fmt.Fprint(w, "Hello")
 	})
 
 	router.GET("/api/seller", sellerController.Read)

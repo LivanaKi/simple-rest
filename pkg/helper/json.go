@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Users/natza/simple-rest/data/response"
+	"github.com/Users/natza/simple-rest/internal/data/response"
 )
 
 func ReadRequestBody(r *http.Request, result interface{}) {
@@ -20,6 +20,7 @@ func ReadRequestBody(r *http.Request, result interface{}) {
 func WriteResponse(writer http.ResponseWriter, response response.WebResponse) {
 	writer.Header().Set("Content-Type", "application/json")
 	writer.WriteHeader(response.Code)
+
 	err := json.NewEncoder(writer).Encode(response)
 	if err != nil {
 		log.Fatal(err)

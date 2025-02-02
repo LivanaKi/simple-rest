@@ -5,9 +5,10 @@ import (
 	"log"
 	"testing"
 
-	"github.com/Users/natza/simple-rest/model"
 	"github.com/stretchr/testify/assert"
 	sqlmock "github.com/zhashkevych/go-sqlxmock"
+
+	"github.com/Users/natza/simple-rest/internal/model"
 )
 
 func TestSave(t *testing.T) {
@@ -18,7 +19,7 @@ func TestSave(t *testing.T) {
 	}
 	defer db.Close()
 	repo := NewSeller(db.DB)
-	seller := model.Seller{Name: "test", Phone: "+11111"}
+	seller := &model.Seller{Name: "test", Phone: "+11111"}
 
 	mock.ExpectBegin()
 	mock.ExpectQuery("insert into sellers").
@@ -66,7 +67,7 @@ func TestUpdate(t *testing.T) {
 	}
 	defer db.Close()
 	repo := NewSeller(db.DB)
-	seller := model.Seller{ID: 1, Name: "test", Phone: "+11111"}
+	seller := &model.Seller{ID: 1, Name: "test", Phone: "+11111"}
 
 	mock.ExpectBegin()
 	mock.ExpectExec("update sellers set name=").
@@ -105,7 +106,7 @@ func TestFindByID(t *testing.T) {
 	}
 	defer db.Close()
 	repo := NewSeller(db.DB)
-	expectedSeller := model.Seller{ID: 1, Name: "test", Phone: "+11111"}
+	expectedSeller := &model.Seller{ID: 1, Name: "test", Phone: "+11111"}
 
 	mock.ExpectBegin()
 	mock.ExpectQuery("select id, name, phone from sellers where id=").WithArgs(1).
