@@ -20,7 +20,7 @@ func NewSellerController(sellerService service.SellerService) *SellerController 
 	return &SellerController{SellerService: sellerService}
 }
 
-func (controller *SellerController) Create(writer http.ResponseWriter, requests *http.Request, params httprouter.Params) {
+func (controller *SellerController) Create(writer http.ResponseWriter, requests *http.Request, _ httprouter.Params) {
 	var sellerCreateRequest request.SellerCreateRequest
 
 	helper.ReadRequestBody(requests, &sellerCreateRequest)
@@ -95,7 +95,7 @@ func (controller *SellerController) Delete(
 	helper.WriteResponse(writer, webResponse)
 }
 
-func (controller *SellerController) Read(writer http.ResponseWriter, requests *http.Request, params httprouter.Params) {
+func (controller *SellerController) Read(writer http.ResponseWriter, requests *http.Request, _ httprouter.Params) {
 	sellers, err := controller.SellerService.Read(requests.Context())
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
