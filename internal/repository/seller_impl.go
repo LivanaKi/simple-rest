@@ -42,7 +42,7 @@ func (b *sellerRepository) Save(ctx context.Context, seller *model.Seller) error
 	defer helper.CommitOrRollback(tx)
 
 	SQL := "insert into sellers(name, phone) values($1, $2)"
-	err = tx.QueryRowContext(ctx, SQL, seller.Name, seller.Phone).Scan(&seller.ID)
+	_, err = tx.ExecContext(ctx, SQL, seller.Name, seller.Phone)
 	if err != nil {
 		return err
 	}

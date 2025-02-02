@@ -18,9 +18,9 @@ func NewRouter(sellerController *controller.SellerController) *httprouter.Router
 
 	router.GET("/api/seller", sellerController.Read)
 	router.POST("/api/seller", sellerController.Create)
-	router.PATCH("/api/seller/:sellerId", sellerController.Update)
-	router.DELETE("/api/seller/:sellerId", sellerController.Delete)
-	router.GET("/api/seller/:sellerId", sellerController.FindByID)
+	router.PATCH("/api/seller/:sellerID", sellerController.Update)
+	router.DELETE("/api/seller/:sellerID", sellerController.Delete)
+	router.GET("/api/seller/:sellerID", sellerController.FindByID)
 
 	return router
 }
