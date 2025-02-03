@@ -44,7 +44,7 @@
 
 ## Оптимізація функції конкатенації
 
- Знаходиться: [pkg/concatenations/concatenations.go](https://github.com/LivanaKi/simple-rest/pkg/concatenations/concatenations.go) 
+ Знаходиться: [pkg/concatenations/concatenations.go](https://github.com/LivanaKi/simple-rest/pkg/concatenations) 
 
  Розроблено додатково дві функції (ConcatTwo, ConcatThree) з використанням strings. Для отримання результатів тесту виконати команду: `make test-bench`
 
